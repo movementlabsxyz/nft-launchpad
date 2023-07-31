@@ -74,7 +74,6 @@ export class CollectionController {
     }
     _promise
       .then(data => {
-        console.log("all data =", data);
         res.send(data)
       })
       .catch(err => {

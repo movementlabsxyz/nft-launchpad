@@ -9,6 +9,8 @@ import NftCard from "../components/NftCard"
 import { CollectionData, getCollectionsApi } from "../api/collections";
 import CollectionCard from "../components/CollectionCard"
 import CollectionDetails from "../components/CollectionDetails"
+import { verifyCreator } from "../api"
+import { StateInfo, getCollectionAddress, w3_getState } from "../utils/web3"
 
 export default function ProtectedPage() {
   const { data: session } = useSession()
@@ -19,23 +21,49 @@ export default function ProtectedPage() {
   const [detailsShow, setDetailsShow] = useState(false);
   const [selectedCollectionDetails, setSelectedCollectionDetails] = useState<CollectionData | null>(null);
 
+  const [stateData, setStateData] = useState<StateInfo | null>(null);
 
-  const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const [creatorJwt, setCreatorJwt] = useState(null);
+
+  const verifySession = async () => {
+    if (!session?.user?.email) return;
+
+    let jwt = await verifyCreator(session?.user?.email);
+    console.log("sign jwt =", jwt);
+    setCreatorJwt(jwt);
+  }
 
   useEffect(() => {
-    setTimeout(() => {
-      setItems([]);
-    }, 3000);
+    setCreatorJwt(null);
+    if (session?.user?.email) {
+      verifySession()
+    }
+  }, [session])
+
+  
+  useEffect(() => {
+    w3_getState().then((data) => {
+      setStateData(data);
+      console.log("data =", data);
+    })
   }, []);
 
   useEffect(() => {
-    if (session?.user?.email) {
+    if (session?.user?.email && stateData) {
       getCollectionsApi(session?.user?.email).then(data => {
-        if (data) setMyCollections(data);
-        console.log("useEffect data=", data)
+        let collections: any = [];
+        data.forEach((d: any) => {
+          let cAddy = getCollectionAddress(d.name);
+          let collectionOnChain = stateData.collections.data.find((v) => v.key === cAddy);
+          if (collectionOnChain)
+            collections.push({ ...d, ...collectionOnChain });
+        })
+        setMyCollections(collections);
+        console.log("setMyCollections =", collections)
       })
     }
-  }, [session])
+  }, [session, stateData])
+  
 
   const onCreateSuccess = (newCollectionInfo: any) => {
     setShowUploadingItemsModal(false);
@@ -48,15 +76,22 @@ export default function ProtectedPage() {
   }
 
   // If no session exists, display access denied message
-  /*if (!session) {
+  if (!creatorJwt) {
     return (
       <Layout>
-        <h1> For Creators </h1>
         <SocialConnect/>
-        <AccessDenied />
+        <div className="w-full text-center mt-4">
+          <h3>Access Denied</h3>
+          <p>
+            { !session ? (<span>You must be signed in to view this page</span>) : 
+              <span> You are not a creator! Please contact <a href="mailto:cooper@movementlabs.xyz">cooper@movementlabs.xyz</a> 
+              </span> 
+            }
+          </p>
+        </div>
       </Layout>
     )
-  }*/
+  }
 
   // If session exists, display content
   return (
@@ -75,7 +110,7 @@ export default function ProtectedPage() {
         </div>
         
         <div className="flex flex-col">
-          <div className="mb-3 text-red-950 px-3 text-lg"> Your Collections </div>
+          <div className="mb-2 mt-3 text-red-950 px-3 text-lg underline "> My Collections </div>
           <div className="">
               { 
                 myCollections && myCollections?.length > 0? 

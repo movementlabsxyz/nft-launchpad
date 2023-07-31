@@ -179,23 +179,21 @@ export class UserController {
       return;
     }
 
-    let signature = req.body.signature as string;
-    signature = signature.slice(2, 130);
-    let signatureBytes: Array<number> = [];
-    for (let i = 0; i < signature.length; i += 2) {
-      let x = parseInt(signature[i], 16);
-      let y = parseInt(signature[i+1], 16);
-      let v = x * 16 + y;
-      signatureBytes.push(v);
+    const getBytes = (v: any): Array<number> => {
+      let val = v as string;
+      val = val.slice(2, val.length);
+      let bytes: Array<number> = [];
+      for (let i = 0; i < val.length; i += 2) {
+        let x = parseInt(val[i], 16);
+        let y = parseInt(val[i+1], 16);
+        let v = x * 16 + y;
+        bytes.push(v);
+      }
+      return bytes;
     }
-
-    let pkBytes: Array<number> = [];
-    for (let i = 0; i < signature.length; i += 2) {
-      let x = parseInt(signature[i], 16);
-      let y = parseInt(signature[i+1], 16);
-      let v = x * 16 + y;
-      signatureBytes.push(v);
-    }
+    
+    let signatureBytes = getBytes(req.body.signature);
+    let pkBytes = getBytes(req.body.publicKey);
 
     db.User.findOne({
       where: {
@@ -206,7 +204,7 @@ export class UserController {
       const verified = nacl.sign.detached.verify(
         Buffer.from(req.body.fullMessage),
         new Uint8Array(signatureBytes),
-        Buffer.from(req.body.publicKey, 'hex'),
+        new Uint8Array(pkBytes),
       );
       if (verified) {
         const tok = {
@@ -223,11 +221,44 @@ export class UserController {
         });
       }
     }).catch(err => {
+      console.log("internal err = ", err);
       res.status(500).send({
         message:
           err.message || "Some error occurred while verifying a User."
       });
     });
+  }
+
+  public static async verifyCreator(req: Request, res: Response) {
+    // Validate request
+    console.log("req.body =", req.body);
+    if (!req.body
+      || !req.body.emailAddress
+    ) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+      return;
+    }
+    db.User.findAll({
+      where: {
+        email: req.body.emailAddress,
+      }
+    }).then((data) => {
+      if (data.length === 0) {
+        res.status(400).send({
+          message: "You are not a creator!"
+        });
+      } else {
+        res.send(data)
+      }
+    })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while verifying a Creator."
+        });
+      });
   }
 
 }

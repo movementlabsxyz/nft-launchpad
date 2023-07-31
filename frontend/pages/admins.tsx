@@ -12,7 +12,7 @@ export default function ProtectedPage() {
   const wallet = useWallet();
   const [verified, setVerified] = useState(true);
   const [mode, setMode] = useState(0);  
-  const [adminJwt, setAdminJwt] = useState("");
+  const [adminJwt, setAdminJwt] = useState(null);
 
   const verifyWallet = async () => {
     if (!wallet.account) return;
@@ -25,26 +25,35 @@ export default function ProtectedPage() {
     console.log("sign body =", body);
 
     if (body) {
-      let jwt = await verifyAdmin(body.fullMessage, body.signature as string, wallet.account.address, wallet.account.publicKey);
+      let jwt = await verifyAdmin(body.fullMessage, body.signature as string, wallet.account.address, wallet.account.publicKey as string);
       console.log("sign jwt =", jwt);
       setAdminJwt(jwt);
     }
   }
   useEffect(() => {
+    setAdminJwt(null);
     if (wallet.account) {
       verifyWallet()
     }
-  }, [wallet])
+  }, [wallet?.account])
+
   // If no session exists, display access denied message
-  /*if (!session) {
+  if (!adminJwt) {
     return (
       <Layout>
-        <h1> For Admins </h1>
-        <SocialConnect/>
-        <AccessDenied />
+        <div className="w-full flex justify-between">
+          <div></div>
+          <div className="flex flex-col">
+            <span className="text-2xl py-1 pt-4">Access Denied</span>
+            <span>Sigin in with your wallet</span>
+          </div>
+          <div className="float-right py-3">
+            <WalletSelectorAntDesign/>
+          </div>
+        </div>
       </Layout>
     )
-  }*/
+  }
 
   // If session exists, display content
   return (

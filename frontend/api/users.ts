@@ -1,7 +1,7 @@
 
 import axios, { AxiosHeaders } from 'axios';
+import { DEFAULT_API_URL } from './collections';
 
-const DEFAULT_API_URL = "http://localhost:8080/v1"
 
 export async function getNonce(walletAddress: string) {
   console.log("getNonce walletAddress =", walletAddress);
@@ -17,7 +17,7 @@ export async function getNonce(walletAddress: string) {
       return null;
     }
     console.log("getNonce api success data =", data);
-    return data.data;
+    return data.data.nonce;
   } catch {
     console.log("axios failed");
     return null;
@@ -50,6 +50,29 @@ export async function verifyAdmin(
     return null;
   }
 }
+
+// todo: verify session email
+export async function verifyCreator(
+  emailAddress: string,
+) {
+  try {
+    const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/creator/verify`, {
+      emailAddress
+    }, {
+      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+    });
+    if (data.status !== 200) {
+      console.log("verifyCreator api failed status =", data.status);
+      return null;
+    }
+    console.log("verifyCreator success data =", data);
+    return data.data;
+  } catch {
+    console.log("axios failed");
+    return null;
+  }
+}
+
 
 export async function addUserApi(
   name: string,

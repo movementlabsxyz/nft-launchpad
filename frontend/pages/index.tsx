@@ -34,7 +34,7 @@ export default function IndexPage() {
         </div>
         { 
           collections && collections?.length > 0? 
-          <div className="grid grid-cols-3 gap-6 sm:grid-cols-3">
+          <div className="grid grid-cols-3 gap-6">
             { 
               collections.map((colData: any) => (
                 <CollectionCard data={colData} onClick={() => onCollectionCardClick(colData)}/>

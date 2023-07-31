@@ -48,7 +48,7 @@ const CollectionDetails = ({
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
             {details?.desc ?? "Description"}
           </p>
-          <p className="text-center text-lg mb-2">Total Minted ( 450 / 10000)</p>
+          <p className="text-center text-lg mb-2">Total Minted ( 1 / {details?.total_supply ?? "Infinity"})</p>
           <div className="w-full bg-gray-200 rounded-full h-5 dark:bg-gray-700">
             <div className="bg-purple-600 h-5 rounded-full dark:bg-purple-500" 
             style={{width: "4%"}}></div>
@@ -59,7 +59,10 @@ const CollectionDetails = ({
             onClick={mintNft}
           >
             Mint
-          </ButtonPrimary> : <></>}
+          </ButtonPrimary> : 
+          <div>
+            <span>Earned Money: {Number(details?.value.earned_coins.value ?? 0) / Math.pow(10, 8)} APT</span>
+          </div>}
       </div>
     </div>
   );

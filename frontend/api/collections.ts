@@ -1,6 +1,8 @@
 import axios, { AxiosHeaders } from 'axios';
 
-const DEFAULT_API_URL = "http://localhost:8080/v1"
+export const DEFAULT_API_URL = "http://localhost:8080/v1"
+// export const DEFAULT_API_URL = "http://168.119.39.199:8080/v1"
+
 const DEFAULT_BASE_IPFS_GATEWAY = "https://ipfs.io/ipfs/"
 
 export async function createCollectionApi(
