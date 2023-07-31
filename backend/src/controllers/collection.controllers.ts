@@ -6,7 +6,6 @@ import { w3_create_collection } from "../web3";
 export class CollectionController {
   public static async create(req: Request, res: Response) {
     // Validate request
-    console.log("body =", req.params);
     if (!req.body
       || !req.body.creator_email
       || !req.body.creator_name
@@ -15,8 +14,8 @@ export class CollectionController {
       || !req.body.description
       || !req.body.mint_price
       || !req.body.total_supply
-      || !req.body.images_cid
-      || !req.body.jsons_cid) {
+      || !req.body.images_uri
+      || !req.body.jsons_uri) {
       res.status(400).send({
         message: "Content can not be empty!"
       });
@@ -32,9 +31,9 @@ export class CollectionController {
       description: req.body.description,
       mint_price: parseInt(req.body.mint_price),
       total_supply: parseInt(req.body.total_supply),
-      images_cid: req.body.images_cid,
-      jsons_cid: req.body.jsons_cid,
-      uri: req.body.jsons_cid,
+      images_uri: req.body.images_uri,
+      jsons_uri: req.body.jsons_uri,
+      logo_uri: req.body.logo_uri,
       tx_hash: ""
     };
 
@@ -64,7 +63,7 @@ export class CollectionController {
   }
 
   public static async all(req: Request, res: Response) {
-    let creator_email = req.params.creator_email;
+    let creator_email = req.query.creator_email;
     let _promise = db.Collection.findAll();
     if (creator_email) {  
       _promise = db.Collection.findAll({

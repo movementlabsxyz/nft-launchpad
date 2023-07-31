@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import checkInViewIntersectionObserver from "../utils/isInViewPortIntersectionObserver";
 import PlaceIcon from "./PlaceIcon";
+import NftCard from "../../NftCard";
 
 export interface NcImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   containerClassName?: string;
@@ -67,7 +68,7 @@ const NcImage: FC<NcImageProps> = ({
       <div
         className={`${className} flex items-center justify-center bg-neutral-200 dark:bg-neutral-6000 text-neutral-100 dark:text-neutral-500`}
       >
-        <div className="h-2/4 max-w-[50%]">
+        <div className="h-full w-full">
           <PlaceIcon />
         </div>
       </div>

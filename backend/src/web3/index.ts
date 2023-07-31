@@ -21,7 +21,7 @@ export const w3_create_collection = async ({
   mint_price,
   description,
   name,
-  uri
+  jsons_uri
 }: any) => {
   const triggerAccount = new AptosAccount(
     new HexString(process.env.TRIGGER_PRIV_KEY).toUint8Array()
@@ -37,7 +37,7 @@ export const w3_create_collection = async ({
       mint_price,
       description,
       name,
-      uri,
+      jsons_uri,
       "" // todo: remove json_uri. 
     ],
     type_arguments: [],

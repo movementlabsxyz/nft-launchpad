@@ -12,7 +12,7 @@ export const pinFileToIPFS = async (file: any) => {
     formData.append("file", file);
 
     const metadata = JSON.stringify({
-      name: "File name",
+      name: `${0}_${Date.now()}`,
     });
     formData.append("pinataMetadata", metadata);
 

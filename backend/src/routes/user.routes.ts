@@ -7,6 +7,7 @@ router.post('/', UserController.create);
 router.get('/all', UserController.all);
 router.post('/remove', UserController.remove);
 router.post('/edit', UserController.update);
-router.get('/:id', UserController.getDetails);
+router.post('/admin/verify', UserController.verifyAdmin);
+router.get('/nonce', UserController.getNonce);
 
 export default router

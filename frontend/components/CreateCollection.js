@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {
   UPLOADING_FILE_TYPES,
   pinDirectoryToPinata,
+  pinFileToIPFS,
   pinUpdatedJSONDirectoryToPinata,
 } from "../utils/pinatasdk";
 import NcModal from "./NcModal";
@@ -30,6 +31,7 @@ const UploadItems = ({
 
   const [imageFileList, setImageFileList] = useState([]);
   const [jsonFileList, setJsonFileList] = useState([]);
+  const [logoFile, setLogoFile] = useState(null);
   const [working, setWorking] = useState(false);
 
   const [status, setCurrentStatus] = useState(ST_NONE);
@@ -77,6 +79,11 @@ const UploadItems = ({
     setJsonFileList(updatingJSONList);
   };
 
+  const handleCollectionLogoImage = (file) => {
+    console.log("fileN =", file)
+    setLogoFile(file);
+  }
+
   const onChangeMintPrice = (e) => {
     let value = e.target.value;
     if (isNaN(parseFloat(value))) 
@@ -84,7 +91,7 @@ const UploadItems = ({
     setMintPrice(value)
   }
 
-  const createCollection = async (imagesCid, jsonsCid) => {
+  const createCollection = async (imagesCid, jsonsCid, logoCid) => {
     if (
       !session?.user?.email
       || !session?.user?.name
@@ -106,7 +113,8 @@ const UploadItems = ({
       mintPrice,
       totalSupply,
       imagesCid ?? cids[0],
-      jsonsCid ?? cids[1]
+      jsonsCid ?? cids[1],
+      logoCid
     );
     
     if (newCollectionData) setCurrentStatus(ST_CREATING_SUCCESS);
@@ -144,6 +152,15 @@ const UploadItems = ({
       setWorking(true);
       setCurrentStatus(ST_UPLOADING);
 
+      console.log("imageFileList =", imageFileList);
+      console.log("logoFile =", logoFile);
+
+      let logoCid = null;
+      if (logoFile.length > 0) {
+        logoCid = await pinFileToIPFS(logoFile[0]);
+        console.log("logoCid =", logoCid);
+      }
+
       let cid = await pinDirectoryToPinata(
         imageFileList,
         UPLOADING_FILE_TYPES.OTHERS
@@ -156,7 +173,7 @@ const UploadItems = ({
           const json = JSON.parse(jsonFileList[idx]);
           const updatedJson = updateJson(
             json,
-            `ipfs://${imagesFolderCid}/${idx}.${imageExtension}`
+            `ipfs://ipfs/${imagesFolderCid}/${idx}.${imageExtension}`
           );
           const updatedFileContent = JSON.stringify(updatedJson);
           updatedJsonList.push(updatedFileContent);
@@ -180,10 +197,10 @@ const UploadItems = ({
             console.log("success imagesFolderCid =", imagesFolderCid, "cidOfJsonFolder =", cidOfJsonFolder);
             
             
-            setCids([imagesFolderCid, cidOfJsonFolder]);
+            setCids([imagesFolderCid, cidOfJsonFolder, logoCid]);
 
             // create collection
-            await createCollection(imagesFolderCid, cidOfJsonFolder);
+            await createCollection(imagesFolderCid, cidOfJsonFolder, logoCid);
           
           } else {
             toast.error(
@@ -238,7 +255,9 @@ const UploadItems = ({
           </div>
           <div className="flex mb-2">  
             <span className=" w-full p-1">Collection Logo :</span>
-            <input type="file" className=" w-full border-gray-200 border-2 p-1"></input>
+            <input type="file" className=" w-full border-gray-200 border-2 p-1"
+              onChange={(e) => handleCollectionLogoImage(e.target.files)}
+            ></input>
           </div>
         </div>
         {/* upload */}

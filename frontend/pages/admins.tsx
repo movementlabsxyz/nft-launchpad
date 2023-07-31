@@ -5,12 +5,36 @@ import WalletSelectorAntDesign from "../components/WalletSelectorAntDesign"
 import { useWallet } from "@aptos-labs/wallet-adapter-react"
 import AdminUserManagement from "../components/AdminUserManagement"
 import AdminSettings from "../components/AdminSettings"
+import { getNonce, verifyAdmin } from "../api"
+import { stringToHex } from "../utils/web3"
 
 export default function ProtectedPage() {
   const wallet = useWallet();
   const [verified, setVerified] = useState(true);
   const [mode, setMode] = useState(0);  
+  const [adminJwt, setAdminJwt] = useState("");
 
+  const verifyWallet = async () => {
+    if (!wallet.account) return;
+    let nonce = await getNonce(wallet.account?.address);
+    let message = `This is for signing message`
+    let body = await wallet.signMessage({
+      message,
+      nonce
+    });
+    console.log("sign body =", body);
+
+    if (body) {
+      let jwt = await verifyAdmin(body.fullMessage, body.signature as string, wallet.account.address, wallet.account.publicKey);
+      console.log("sign jwt =", jwt);
+      setAdminJwt(jwt);
+    }
+  }
+  useEffect(() => {
+    if (wallet.account) {
+      verifyWallet()
+    }
+  }, [wallet])
   // If no session exists, display access denied message
   /*if (!session) {
     return (

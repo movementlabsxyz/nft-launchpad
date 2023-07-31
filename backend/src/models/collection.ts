@@ -23,17 +23,17 @@ export default (sequelize: Sequelize) => sequelize.define('collection', {
   },
   total_supply: {
     type: DataTypes.INTEGER
-  },  
+  },
   mint_price: {
     type: DataTypes.STRING
   },
-  images_cid: {
+  images_uri: {
     type: DataTypes.STRING
   },
-  jsons_cid: {
+  jsons_uri: {
     type: DataTypes.STRING
   },
-  uri: {
+  logo_uri: {
     type: DataTypes.STRING
   },
   tx_hash: {

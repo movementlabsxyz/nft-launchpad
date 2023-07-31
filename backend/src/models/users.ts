@@ -18,4 +18,7 @@ export default (sequelize: Sequelize) => sequelize.define('users', {
   role: {
     type: DataTypes.INTEGER
   },
+  nonce: {
+    type: DataTypes.STRING
+  },
 }, {})

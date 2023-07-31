@@ -1,6 +1,8 @@
 import axios, { AxiosHeaders } from 'axios';
 
 const DEFAULT_API_URL = "http://localhost:8080/v1"
+const DEFAULT_BASE_IPFS_GATEWAY = "https://ipfs.io/ipfs/"
+
 export async function createCollectionApi(
   creator_email: string,
   creator_name: string,
@@ -11,6 +13,7 @@ export async function createCollectionApi(
   total_supply: string,
   images_cid: string,
   jsons_cid: string,
+  logo_cid: string,
 ) {
   try {
     const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/collection/`, {
@@ -21,8 +24,9 @@ export async function createCollectionApi(
       description,
       mint_price,
       total_supply,
-      images_cid,
-      jsons_cid,
+      images_uri: DEFAULT_BASE_IPFS_GATEWAY + images_cid,
+      jsons_uri: DEFAULT_BASE_IPFS_GATEWAY + jsons_cid,
+      logo_uri: DEFAULT_BASE_IPFS_GATEWAY + logo_cid
     }, {
       headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
     });
@@ -70,8 +74,8 @@ export type CollectionData = {
   desc: string,
   total_supply: number,
   mint_price: string,
-  images_cid: string,
-  jsons_cid: string,
-  uri: string,
+  images_uri: string,
+  jsons_uri: string,
+  logo_uri: string,
   tx_hash: string
 }

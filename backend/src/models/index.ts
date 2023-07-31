@@ -16,8 +16,8 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   }
 });
 
-let Collection = CollectionModel(sequelize);
-let User = UsersModel(sequelize);
+const Collection = CollectionModel(sequelize);
+const User = UsersModel(sequelize);
 
 export default {
   Sequelize,

@@ -3,6 +3,54 @@ import axios, { AxiosHeaders } from 'axios';
 
 const DEFAULT_API_URL = "http://localhost:8080/v1"
 
+export async function getNonce(walletAddress: string) {
+  console.log("getNonce walletAddress =", walletAddress);
+  try {
+    const data = await axios.get(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/nonce`,
+    {
+      params: {
+        walletAddress
+      }
+    });
+    if (data.status !== 200) {
+      console.log("getNonce failed status =", data.status);
+      return null;
+    }
+    console.log("getNonce api success data =", data);
+    return data.data;
+  } catch {
+    console.log("axios failed");
+    return null;
+  }
+}
+
+export async function verifyAdmin(
+  fullMessage: string,
+  signature: string,
+  walletAddress: string,
+  publicKey: string
+) {
+  try {
+    const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/admin/verify`, {
+      fullMessage,
+      signature,
+      walletAddress,
+      publicKey
+    }, {
+      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+    });
+    if (data.status !== 200) {
+      console.log("verifyAdmin api failed status =", data.status);
+      return null;
+    }
+    console.log("verifyAdmin success data =", data);
+    return data.data;
+  } catch {
+    console.log("axios failed");
+    return null;
+  }
+}
+
 export async function addUserApi(
   name: string,
   email: string,

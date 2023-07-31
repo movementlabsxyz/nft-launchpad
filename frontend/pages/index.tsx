@@ -4,7 +4,7 @@ import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 import Layout from "../components/layout"
 import NftCard from "../components/NftCard"
 import { useEffect, useState } from "react";
-import { getCollectionsApi } from "../api/collections";
+import { CollectionData, getCollectionsApi } from "../api/collections";
 import CollectionCard from "../components/CollectionCard";
 import CollectionDetails from "../components/CollectionDetails";
 
@@ -12,15 +12,7 @@ export default function IndexPage() {
   const [collections, setCollections] = useState<any>([]);
   const [updateData, toggleUpdate] = useState(true);
   const [detailsShow, setDetailsShow] = useState(false);
-
-  const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-  const [selectedCollectionDetails, setSelectedCollectionDetails] = useState();
-
-  useEffect(() => {
-    setTimeout(() => {
-      setItems([]);
-    }, 3000);
-  }, []);
+  const [selectedCollectionDetails, setSelectedCollectionDetails] = useState<CollectionData | null>(null);
 
   useEffect(() => {
     getCollectionsApi().then(data => {
@@ -31,11 +23,7 @@ export default function IndexPage() {
 
   const onCollectionCardClick = (colData: any) => {
     setDetailsShow(true);
-    setSelectedCollectionDetails({
-      collectionName: colData.name,
-      uri: colData.uri,
-      mintPrice: colData.mint_price,
-    } as any);
+    setSelectedCollectionDetails(colData);
   }
 
   return (
@@ -45,7 +33,7 @@ export default function IndexPage() {
           <WalletSelectorAntDesign/>
         </div>
         { 
-          collections.length > 0? 
+          collections && collections?.length > 0? 
           <div className="grid grid-cols-3 gap-6 sm:grid-cols-3">
             { 
               collections.map((colData: any) => (
