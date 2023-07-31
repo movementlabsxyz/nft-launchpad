@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
-      <main style={{ minHeight: "400px" }}>{children}</main>
+      <main style={{ minHeight: "400px" }} className="p-3">{children}</main>
       <ToastContainer />
       <Footer />
     </>

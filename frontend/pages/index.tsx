@@ -41,25 +41,19 @@ export default function IndexPage() {
   return (
     <Layout>
       <div className="flex flex-col">
-        <span className="text-4xl mb-5"> For Users </span>
         <div className="flex justify-end float-right mb-3">
           <WalletSelectorAntDesign/>
         </div>
         { 
-          items.length > 0? 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          collections.length > 0? 
+          <div className="grid grid-cols-3 gap-6 sm:grid-cols-3">
             { 
-              items.map(() => (
-                <NftCard/>
+              collections.map((colData: any) => (
+                <CollectionCard data={colData} onClick={() => onCollectionCardClick(colData)}/>
               ))
             } 
           </div> : <div className="flex justify-center text-lg w-full">No Collections yet</div> 
         }
-        {
-          collections.map((colData: any) => (
-            <CollectionCard onClick={() => onCollectionCardClick(colData)}/>
-          ))
-        } 
       </div>
 
       <CollectionDetails

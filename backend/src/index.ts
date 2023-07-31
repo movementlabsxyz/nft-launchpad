@@ -10,12 +10,11 @@ const main = async () => {
 
   // setup database
   try {
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({});
   } catch(e: any) {
     // tslint:disable-next-line:no-console
     console.error("Db error happened.", e);
   }
-
 
   // add cors
   const corsOptions = {

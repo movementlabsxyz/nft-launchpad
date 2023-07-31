@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
 import Layout from "../components/layout"
 import AccessDenied from "../components/access-denied"
-import { SocialConnect } from "../components/social-connect"
 import WalletSelectorAntDesign from "../components/WalletSelectorAntDesign"
-import { getAllUsersApi, removeUserApi } from "../api"
 import { useWallet } from "@aptos-labs/wallet-adapter-react"
-import AddUserModal from "../components/AddUserModal"
-import Button from "../components/Button"
-import ConfirmDialog from "../components/ConfirmDialog"
-import { toast } from "react-toastify"
 import AdminUserManagement from "../components/AdminUserManagement"
 import AdminSettings from "../components/AdminSettings"
 
@@ -33,7 +26,6 @@ export default function ProtectedPage() {
   return (
     <Layout>
       <div className="flex flex-col">
-        <span className="text-4xl mb-5"> For Admins </span>
         <div className="flex w-full justify-between mb-3">
           <div className="w-4/12 bg-white border-t border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
             <div className="grid h-full max-w-lg grid-cols-2 mx-auto font-medium">

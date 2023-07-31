@@ -59,6 +59,7 @@ export default function ProtectedPage() {
 
   // If session exists, display content
   return (
+    <div>
       <div className="flex flex-col">
         <div className="flex w-full justify-end mb-3">
           <div className="flex w-full justify-start">
@@ -146,5 +147,6 @@ export default function ProtectedPage() {
           onClose={() => setShowRmUserModal(false)}
         />
       </div>
+    </div>
   )
 }

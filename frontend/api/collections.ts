@@ -60,3 +60,18 @@ export async function getCollectionsApi(
     return null;
   }
 }
+
+export type CollectionData = {
+  id: number,
+  creator_email: string,
+  creator_name: string,
+  creator_image: string,
+  name: string,
+  desc: string,
+  total_supply: number,
+  mint_price: string,
+  images_cid: string,
+  jsons_cid: string,
+  uri: string,
+  tx_hash: string
+}
