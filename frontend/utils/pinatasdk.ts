@@ -66,8 +66,9 @@ export const UPLOADING_FILE_TYPES = {
   IMAGE: 2,
 };
 
-export const pinDirectoryToPinata = async (
+export const pinImgageDirectoryToPinata = async (
   filelist: any,
+  logofilelist: any,
   type = UPLOADING_FILE_TYPES.IMAGE
 ) => {
   let ipfsCid: any = "";
@@ -78,6 +79,15 @@ export const pinDirectoryToPinata = async (
     Array.from(filelist).forEach((file: any) => {
       formData.append("file", file);
     });
+    console.log("formDAta =", formData);
+
+    if (logofilelist?.length > 0) {
+      // "images/0.png"
+      let path = filelist[0].webkitRelativePath as string;
+      let dirPath = path.split('/')[0];
+      formData.append("file", logofilelist[0], `${dirPath}/logo.png`)
+    }
+    
 
     const metadata = JSON.stringify({
       name: `${type}_${Date.now()}`,

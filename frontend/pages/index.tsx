@@ -28,7 +28,7 @@ export default function IndexPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col">
+      <div className="flex flex-col px-5">
         <div className="flex justify-end float-right mb-3">
           <WalletSelectorAntDesign/>
         </div>

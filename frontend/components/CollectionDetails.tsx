@@ -6,6 +6,8 @@ import ButtonPrimary from "./ButtonPrimary";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { AptosDecimalToNoDecimal, getCurrentSupply, w3_mint_nft } from "../utils/web3";
 import { use, useEffect, useMemo, useState } from "react";
+import { getNftNameAndUriApi } from "../api";
+import NcImage from "./shared/NcImage/NcImage";
 
 const CollectionDetails = ({
   show,
@@ -16,26 +18,36 @@ const CollectionDetails = ({
 }: any) => {
   const wallet = useWallet();
 
+  const [updateToggle, setUpdateToggle] = useState(false);
+
   const mintNft = () => {
     if (!wallet?.account?.address || !details) {
       console.log("wallet error");
       return;
     }
     let collection_name = details.name;
-    let nft_name = details.name + " #1";
-    let nft_uri = details.jsons_uri + "/1.json";
-    w3_mint_nft({
-      collection_name,
-      nft_name,
-      nft_uri
-    }, wallet)
-      .then((res) => {
-        if (res) 
-          toast.success("NFT Minted Successfully! Check your wallet please.");
-      })
-      .catch(() => {
-        toast.error("Wallet sign and submit failed");
-      })
+    getNftNameAndUriApi(collection_name).then((data) => {
+      if (!data) return;
+      console.log("getNftNameAndUriApi data =", data);
+
+      let nft_name = data.nft_name;
+      let nft_uri = data.nft_uri;
+      w3_mint_nft({
+        collection_name,
+        nft_name,
+        nft_uri
+      }, wallet)
+        .then((res) => {
+          if (res) {
+            toast.success("NFT Minted Successfully! \n Check your wallet please.");
+            setUpdateToggle(!updateToggle);
+          }
+        })
+        .catch(() => {
+          toast.error("Wallet sign and submit failed");
+        })
+    })
+
   }
 
   const [currentSupply, setCurrentSupply] = useState(0);
@@ -53,12 +65,12 @@ const CollectionDetails = ({
     } else {
       setCurrentSupply(0);
     }
-  }, [details?.name])
+  }, [details?.name, updateToggle])
 
   const renderContent = () => (
     <div className="flex w-full h-full bg-white">
       <a href="#" className="w-6/12 h-full">
-          <img className="rounded-t-lg" src={details?.logo_uri ?? (details?.images_uri + "/1.png")} alt="" />
+          <NcImage className="rounded-t-lg" src={details?.images_uri + "/0.png"} alt="" />
       </a>
       <div className="p-5 w-6/12">
           <a href="#">

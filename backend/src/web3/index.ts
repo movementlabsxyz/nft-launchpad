@@ -7,6 +7,7 @@ import {
   HexString, 
   AptosClient, 
   FaucetClient,
+  Types,
 } from "aptos";
 import assert from 'assert';
 import 'dotenv/config'
@@ -39,7 +40,7 @@ export const w3_create_collection = async ({
       mint_price,
       desc,
       name,
-      "https://ipfs.bluemove.net/uploads/datablaze-starter-pack/logo.webp",//logo_uri,
+      logo_uri,
       jsons_uri
     ],
     type_arguments: [],
@@ -57,4 +58,16 @@ export const w3_create_collection = async ({
     console.log("transaction failed ", transactionRes?.hash);
     return null;
   }
+}
+
+export const getCurrentSupply = async (
+  objectAddress: string,
+): Promise<number> => {
+  const payload: Types.ViewRequest = {
+    function: '0x4::collection::count',
+    type_arguments: ["0x4::collection::Collection"],
+    arguments: [new HexString(objectAddress!).hex()]
+  };
+  const result = await client.view(payload);
+  return parseInt(BigInt((result as any)[0].vec).toString());
 }

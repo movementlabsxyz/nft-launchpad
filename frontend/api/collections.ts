@@ -50,6 +50,29 @@ export async function createCollectionApi(
 
 }
 
+
+export async function getNftNameAndUriApi(
+  collection_name: string,
+) {
+  try {
+    const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/collection/nft/name`, {
+      collection_name
+    }, {
+      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+    });
+    if (data.status !== 200) {
+      console.log("api failed status =", data.status);
+      return null;
+    }
+    console.log("api success data =", data);
+    return data.data;
+  } catch {
+    console.log("axios failed");
+    return null;
+  }
+
+}
+
 export async function getCollectionsApi(
   creator_email?: string,
 ) {

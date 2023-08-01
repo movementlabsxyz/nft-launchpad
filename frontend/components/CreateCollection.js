@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // import folderShapeSVG from "/images/folder-svgrepo-com.svg";
 import {
   UPLOADING_FILE_TYPES,
-  pinDirectoryToPinata,
+  pinImgageDirectoryToPinata,
   pinFileToIPFS,
   pinUpdatedJSONDirectoryToPinata,
 } from "../utils/pinatasdk";
@@ -174,18 +174,22 @@ const UploadItems = ({
       console.log("logoFile =", logoFile);
 
       let logoCid = null;
-      if (logoFile?.length > 0) {
+      /*if (logoFile?.length > 0) {
         logoCid = await pinFileToIPFS(logoFile);
         console.log("logoCid =", logoCid);
-      }
+      }*/
 
-      let cid = await pinDirectoryToPinata(
+      let cid = await pinImgageDirectoryToPinata(
         imageFileList,
+        logoFile,
         UPLOADING_FILE_TYPES.OTHERS
       );
       console.log("cid =", cid);
       if (cid !== null) {
         const imagesFolderCid = cid;
+        if (logoFile?.length > 0) {
+          logoCid = cid + "/logo.png";
+        }
         var updatedJsonList = [];
         for (let idx = 0; idx < jsonFileList.length; idx++) {
           const json = JSON.parse(jsonFileList[idx]);

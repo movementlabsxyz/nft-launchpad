@@ -200,6 +200,12 @@ export class UserController {
         wallet: req.body.walletAddress,
       }
     }).then((data) => {
+      if (!data) {
+        res.status(400).send({
+          message: "Not found!"
+        });
+        return;
+      }
       console.log("data.toJson =", data.toJSON())
       const verified = nacl.sign.detached.verify(
         Buffer.from(req.body.fullMessage),

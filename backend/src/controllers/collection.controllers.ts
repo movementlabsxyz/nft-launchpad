@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
 import db from "../models";
-import { w3_create_collection } from "../web3";
+import { getCurrentSupply, w3_create_collection } from "../web3";
 
 export class CollectionController {
   public static async create(req: Request, res: Response) {
@@ -83,6 +83,42 @@ export class CollectionController {
             err.message || "Some error occurred while listing the Collection."
         });
       });
+  }
+
+  public static async get_nft_name(req: Request, res: Response) {
+    if (!req.body
+      || !req.body.collection_name) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+      return;
+    }
+
+    let collection_name = req.body.collection_name;
+    db.Collection.findOne({
+      where: {
+        name: collection_name
+      }
+    }).then((found) => {
+      if (!found) {
+        res.status(400).send({
+          message: "Not found!"
+        });
+        return;
+      }
+      let data = found.toJSON();
+      getCurrentSupply(data.collection_address).then(v => {
+        res.status(200).send({
+          nft_name: collection_name + " #" + (v + 1),
+          nft_uri: data.jsons_uri + "/" + (v + ".json"),
+        })
+      }).catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred."
+        });
+      });
+    });
   }
 
   public static async getDetails(req: Request, res: Response) {
