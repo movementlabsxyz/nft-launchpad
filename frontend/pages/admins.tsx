@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import Layout from "../components/layout"
 import AccessDenied from "../components/access-denied"
 import WalletSelectorAntDesign from "../components/WalletSelectorAntDesign"
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
+
 import { useWallet } from "@aptos-labs/wallet-adapter-react"
 import AdminUserManagement from "../components/AdminUserManagement"
 import AdminSettings from "../components/AdminSettings"
@@ -40,7 +42,7 @@ export default function ProtectedPage() {
     if (wallet.account) {
       verifyWallet()
     }
-  }, [wallet?.account])
+  }, [wallet?.account?.address])
 
   // If no session exists, display access denied message
   if (!adminJwt) {

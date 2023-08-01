@@ -16,8 +16,8 @@ import { sha3_256 as sha3Hash } from "@noble/hashes/sha3";
 
 export const NODE_URL = "https://fullnode.devnet.aptoslabs.com";
 export const FAUCET_URL = "https://faucet.devnet.aptoslabs.com";
-const DefaultContractAddress = "0x4477072c2c9867029b336fd96e27c8f33fcf56088dc3245fce4905e4646e2286";
-const DefaultCreatorAddress = "0xec7230d4acbfd48d01b920d5ab5e2644c4be6d1af8abea8dd080de414cbb8ff4";
+const DefaultContractAddress = "0x78bbaf217f3bd5891fddca17af38951450cde1e9c73d2688e479422f12c86b41";
+const DefaultCreatorAddress = "0x20236e071ba6882f9168f2bd4094fcab1ce04744bd941ad5adc11caa946fe179";
 
 const client = new AptosClient(NODE_URL);
 
@@ -106,6 +106,27 @@ export const w3_changeTaxRate = async ({
     return null;
   }
 }
+
+export const w3_withdrawTax = async (wallet: any) => {
+  const payload: any = {
+    type: 'entry_function_payload',
+    function: `${process.env.CONTRACT_ADDRESS ?? DefaultContractAddress}::main::withdraw_tax`,
+    arguments: [],
+    type_arguments: [],
+  };
+
+  const transactionRes = await wallet.signAndSubmitTransaction(payload);
+  try {
+    await client.waitForTransaction(transactionRes.hash, {
+      checkSuccess: true
+    });
+    return transactionRes.hash
+  } catch {
+    console.log("transaction failed ", transactionRes?.hash);
+    return null;
+  }
+}
+
 
 export const w3_withdrawEarning = async ({
   collection_name,

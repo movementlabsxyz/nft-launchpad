@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { useWallet } from "@aptos-labs/wallet-adapter-react"
-import { AptosDecimalToNoDecimal, StateInfo, getCollectionAddress, w3_changeAdmin, w3_changeTaxRate, w3_getState, w3_withdrawEarning } from "../utils/web3";
+import { AptosDecimalToNoDecimal, StateInfo, getCollectionAddress, w3_changeAdmin, w3_changeTaxRate, w3_getState, w3_withdrawEarning, w3_withdrawTax } from "../utils/web3";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import { getCollectionsApi } from "../api";
@@ -9,7 +9,10 @@ import EarningWithdrawDialog from "./EarningWithdrawDialog";
 export default function AdminPage() {
   const wallet = useWallet();
   const [verified, setVerified] = useState(true);
+
   const [stateData, setStateData] = useState<StateInfo | null>(null);
+  const [updateFlag, toggleFlag] = useState(false);
+
   const [adminAddress, setAdminAddress] = useState("");
   const [taxRate, setTaxRate] = useState(0);
 
@@ -25,7 +28,7 @@ export default function AdminPage() {
       setStateData(data);
       console.log("data =", data);
     })
-  }, []);
+  }, [updateFlag]);
 
   useEffect(() => {
     if (stateData) {
@@ -70,7 +73,7 @@ export default function AdminPage() {
       return;
     }
     w3_changeTaxRate({
-        taxRate
+        taxRate: taxRate * 10
       }, wallet
     ).then(() => {
       toast.success("Admin has changed Successfully!");
@@ -79,6 +82,21 @@ export default function AdminPage() {
       toast.error("Admin changing failed");
     })
   }
+
+  const withdrawTax = () => {
+    if (!wallet?.account?.address || !stateData) {
+      console.log("wallet error");
+      return;
+    }
+
+    w3_withdrawTax(wallet).then(() => {
+      toast.success("Tax withdrawn Successfully!");
+    })
+    .catch(() => {
+      toast.error("Withdrawing failed");
+    })
+  }
+
   
   const withdrawEarning = (receiverAddy: string) => {
     if (!wallet?.account?.address || !stateData) {
@@ -91,6 +109,7 @@ export default function AdminPage() {
       }, wallet
     ).then(() => {
       toast.success("Withdrawn Successfully!");
+      toggleFlag(!updateFlag);
     })
     .catch(() => {
       toast.error("Withdrawing failed");
@@ -118,31 +137,34 @@ export default function AdminPage() {
           
         </div>
       </div>
-      <div className="flex p-3 bg-amber-100 mt-3 justify-between">
-        <div className="flex w-full">    
-          <span className="w-5/12 p-3 mb-2 text-amber-950 text-lg px-1"> Current Tax Rate: </span>
-          <input type="text" className="w-4/12 border-gray-200 border-2 p-1 mr-3 text-right"
-            value={taxRate} 
-            onChange={(e) => setTaxRate(Number(e.target.value))}
-          />
-          <span className="py-4">%</span>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex p-3 bg-amber-100 mt-3 justify-between">
+          <div className="flex w-full">    
+            <span className="w-5/12 p-3 mb-2 text-amber-950 text-lg px-1"> Current Tax Rate: </span>
+            <input type="text" className="w-4/12 border-gray-200 border-2 p-1 mr-3 text-right"
+              value={taxRate} 
+              onChange={(e) => setTaxRate(Number(e.target.value))}
+            />
+            <span className="py-4">%</span>
+          </div>
+          <Button 
+            className=" mt-3 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            onClick={() => changeTaxRate()}
+          >
+            Change
+          </Button>
         </div>
-        <Button 
-          className=" mt-3 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-          onClick={() => changeTaxRate()}
-        >
-          Change
-        </Button>
+        <div className="flex p-3 bg-amber-100 mt-3 justify-between">  
+          <span className="text-xl px-1 py-3"> Tax Taken: {taxValue} APT</span>
+          <Button 
+            className=" text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            onClick={() => withdrawTax()}
+          >
+            Withdraw Tax
+          </Button>
+        </div>
       </div>
-      <div className="flex p-3 bg-amber-100 mt-3 justify-between">  
-        <span className="text-xl px-1 py-3"> Tax Taken: {taxValue} APT</span>
-        <Button 
-          className=" text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-          onClick={() => changeAdmin()}
-        >
-          Withdraw Tax
-        </Button>
-      </div>
+      
       <div className="flex-col p-3 bg-amber-100 mt-3 justify-between">
         <span className="px-1 mb-3 text-lg">Earned per collection</span>
         <table className="w-full mt-2 text-sm text-left text-gray-500 dark:text-gray-400">
@@ -181,7 +203,7 @@ export default function AdminPage() {
                     <td className="px-6 py-4">
                       {AptosDecimalToNoDecimal(col?.value?.earned_coins?.value)}
                     </td>
-                    <td className="px-1 py-1 text-right">
+                    <td className="px-6 py-1 text-right">
                         <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           onClick={() => {
                             setShowWithdrawModal(true);

@@ -281,6 +281,9 @@ const UploadItems = ({
               onChange={(e) => handleCollectionLogoImage(e.target.files)}
             ></input>
           </div>
+          <div className="float-right">
+            If you don't have nft images, <a href="../samples.rar" className="text-red-400 underline">Download</a> sample images
+          </div>
         </div>
         {/* upload */}
         <div className="flex p-2">
