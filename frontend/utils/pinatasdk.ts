@@ -9,17 +9,18 @@ export const pinFileToIPFS = async (file: any) => {
     //   const src = "path/to/file.png";
 
     // const file = fs.createReadStream(src);
+
     formData.append("file", file);
 
     const metadata = JSON.stringify({
       name: `${0}_${Date.now()}`,
     });
     formData.append("pinataMetadata", metadata);
-
     const options = JSON.stringify({
       cidVersion: 0,
     });
     formData.append("pinataOptions", options);
+
 
     const res = await axios.post(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",

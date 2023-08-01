@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { useWallet } from "@aptos-labs/wallet-adapter-react"
-import { StateInfo, getCollectionAddress, w3_changeAdmin, w3_changeTaxRate, w3_getState, w3_withdrawEarning } from "../utils/web3";
+import { AptosDecimalToNoDecimal, StateInfo, getCollectionAddress, w3_changeAdmin, w3_changeTaxRate, w3_getState, w3_withdrawEarning } from "../utils/web3";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import { getCollectionsApi } from "../api";
@@ -179,7 +179,7 @@ export default function AdminPage() {
                       {col.creator_email}
                     </td>
                     <td className="px-6 py-4">
-                      {col.value.earned_coins.value}
+                      {AptosDecimalToNoDecimal(col?.value?.earned_coins?.value)}
                     </td>
                     <td className="px-1 py-1 text-right">
                         <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

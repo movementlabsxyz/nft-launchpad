@@ -38,7 +38,7 @@ export default function ProtectedPage() {
     if (session?.user?.email) {
       verifySession()
     }
-  }, [session])
+  }, [session?.user?.email])
 
   
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function ProtectedPage() {
     if (session?.user?.email && stateData) {
       getCollectionsApi(session?.user?.email).then(data => {
         let collections: any = [];
-        data.forEach((d: any) => {
+        data?.forEach((d: any) => {
           let cAddy = getCollectionAddress(d.name);
           let collectionOnChain = stateData.collections.data.find((v) => v.key === cAddy);
           if (collectionOnChain)
@@ -62,7 +62,7 @@ export default function ProtectedPage() {
         console.log("setMyCollections =", collections)
       })
     }
-  }, [session, stateData])
+  }, [session?.user?.email, stateData])
   
 
   const onCreateSuccess = (newCollectionInfo: any) => {

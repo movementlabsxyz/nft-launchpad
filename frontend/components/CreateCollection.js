@@ -10,7 +10,7 @@ import NcModal from "./NcModal";
 import { toast } from "react-toastify";
 import ButtonPrimary from "./ButtonPrimary";
 import { Backdrop, CircularProgress } from "@mui/material";
-import { createCollectionApi } from "../api/collections";
+import { createCollectionApi, DEFAULT_BASE_IPFS_GATEWAY } from "../api/collections";
 
 import { useSession } from "next-auth/react"
 
@@ -117,8 +117,26 @@ const UploadItems = ({
       logoCid
     );
     
-    if (newCollectionData) setCurrentStatus(ST_CREATING_SUCCESS);
-    else setCurrentStatus(ST_CREATING_FAILED);
+    if (newCollectionData) {
+      setCurrentStatus(ST_CREATING_SUCCESS);
+      toast.success(
+        <div>
+          {`Successfully Created a Collection.`}
+        </div>,
+        "Creating is succeed",
+        20000
+      );
+    }
+    else {
+      setCurrentStatus(ST_CREATING_FAILED);
+      toast.error(
+        <div>
+          {`Failed in Creating a new Collection.`}
+        </div>,
+        "Creating is failed",
+        20000
+      );
+    }
 
     setTimeout(() => onOk(newCollectionData), 500);
   }
@@ -156,8 +174,8 @@ const UploadItems = ({
       console.log("logoFile =", logoFile);
 
       let logoCid = null;
-      if (logoFile.length > 0) {
-        logoCid = await pinFileToIPFS(logoFile[0]);
+      if (logoFile?.length > 0) {
+        logoCid = await pinFileToIPFS(logoFile);
         console.log("logoCid =", logoCid);
       }
 
@@ -173,7 +191,7 @@ const UploadItems = ({
           const json = JSON.parse(jsonFileList[idx]);
           const updatedJson = updateJson(
             json,
-            `ipfs://ipfs/${imagesFolderCid}/${idx}.${imageExtension}`
+            `${DEFAULT_BASE_IPFS_GATEWAY}${imagesFolderCid}/${idx}.${imageExtension}`
           );
           const updatedFileContent = JSON.stringify(updatedJson);
           updatedJsonList.push(updatedFileContent);
@@ -187,8 +205,8 @@ const UploadItems = ({
           if (cidOfJsonFolder !== null) {
             toast.success(
               <div>
-                {`You 've uploaded a folder of json files to Pindata store.\n
-             You can go on minting with new CID.`}
+                {`You 've uploaded a folder of json files to ipfs store.\n
+                  Creating a Collection on Chain now.`}
               </div>,
               "Uploading is succeed",
               20000

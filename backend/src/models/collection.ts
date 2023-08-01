@@ -15,6 +15,9 @@ export default (sequelize: Sequelize) => sequelize.define('collection', {
   creator_image: {
     type: DataTypes.STRING
   },
+  collection_address: {
+    type: DataTypes.STRING
+  },
   name: {
     type: DataTypes.STRING
   },

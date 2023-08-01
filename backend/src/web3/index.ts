@@ -19,10 +19,12 @@ const client = new AptosClient(NODE_URL);
 export const w3_create_collection = async ({
   total_supply,
   mint_price,
-  description,
+  desc,
   name,
+  logo_uri,
   jsons_uri
 }: any) => {
+
   const triggerAccount = new AptosAccount(
     new HexString(process.env.TRIGGER_PRIV_KEY).toUint8Array()
   );
@@ -35,10 +37,10 @@ export const w3_create_collection = async ({
     arguments: [
       total_supply,
       mint_price,
-      description,
+      desc,
       name,
-      jsons_uri,
-      "" // todo: remove json_uri. 
+      "https://ipfs.bluemove.net/uploads/datablaze-starter-pack/logo.webp",//logo_uri,
+      jsons_uri
     ],
     type_arguments: [],
   };

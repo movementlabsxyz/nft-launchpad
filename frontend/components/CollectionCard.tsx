@@ -4,6 +4,7 @@ import Avatar from "./shared/Avatar/Avatar";
 import NcImage from "./shared/NcImage/NcImage";
 import VerifyIcon from "./shared/VerifyIcon";
 import { CollectionData } from "../api";
+import { AptosDecimalToNoDecimal } from "../utils/web3";
 
 export interface CollectionCardProps {
   data: CollectionData;
@@ -19,10 +20,10 @@ const CollectionCard: FC<CollectionCardProps> = ({
 }) => {
   
   let imgs = [
-    data.logo_uri ?? (data.images_uri + "/1.png"),
-    (data.images_uri + "/1.png"),
-    (data.images_uri + "/2.png"),
-    (data.images_uri + "/3.png")
+    data?.logo_uri ?? (data?.images_uri + "/1.png"),
+    (data?.images_uri + "/1.png"),
+    (data?.images_uri + "/2.png"),
+    (data?.images_uri + "/3.png")
   ];
 
   return (
@@ -31,29 +32,31 @@ const CollectionCard: FC<CollectionCardProps> = ({
       onClick={() => onClick()}
     >
       <NcImage containerClassName="absolute inset-0" src={imgs[0]} />
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 group-hover:h-full to-transparent "></div>
+      <div className="text-white absolute top-0 right-0 p-5 bg-gray-700 bg-opacity-60">
+        <p className="text-white"><b>Mint Price: {AptosDecimalToNoDecimal(data?.mint_price)} APT</b></p>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/80 group-hover:h-full to-transparent "></div>
 
       <div className="relative mt-auto">
         {/* AUTHOR */}
-        <div className="flex items-center">
-          <Avatar sizeClass="h-6 w-6" containerClassName="ring-2 ring-white" imgUrl={data.creator_image} />
-          <div className="ml-2 text-xs text-white">
-            <span className="font-normal">by</span>
-            {` `}
-            <span className="font-medium">{data.creator_name}</span>
+        <div className="flex justify-between">
+          <div className="flex items-center ">
+            <Avatar sizeClass="h-6 w-6" containerClassName="ring-2 ring-white" imgUrl={data?.creator_image ?? ""} />
+            <div className="ml-2 text-xs text-white">
+              <span className="font-normal">by</span>
+              {` `}
+              <span className="font-medium">{data?.creator_name ?? ""}</span>
+            </div>
+            <VerifyIcon iconClass="w-4 h-4" />
           </div>
-          <VerifyIcon iconClass="w-4 h-4" />
         </div>
         {/* TITLE */}
         <div className=" mt-1.5 flex justify-between">
-          <h2 className="font-semibold text-3xl text-white">
-            {data.name}
+          <h2 className="font-bold text-3xl text-white">
+            {data?.name ?? ""}
           </h2>
         </div>
-        <div>
-          <p className="text-white"><b>Mint Price: {data.mint_price ?? 0} APT</b></p>
-        </div>
-        <Ratings/>
         {/* LISTS */}
         <div className="grid grid-cols-3 gap-4 mt-5">
           <NcImage

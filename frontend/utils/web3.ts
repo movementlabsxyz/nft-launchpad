@@ -7,6 +7,8 @@ import {
   HexString, 
   AptosClient, 
   FaucetClient,
+  Provider,
+  Types
 } from "aptos";
 import assert from 'assert';
 import 'dotenv/config'
@@ -41,17 +43,13 @@ export const w3_mint_nft = async ({
     type_arguments: [],
   };
 
-  const bcsTxn = await wallet.signAndSubmitTransaction(payload);
-  console.log("h2")
-  const transactionRes = await client.submitTransaction(bcsTxn);
-  console.log("h3")
+  const transactionRes = await wallet.signAndSubmitTransaction(payload);
   try {
     await client.waitForTransaction(transactionRes.hash, {
       checkSuccess: true
     });
     return transactionRes.hash
   } catch {
-    console.log("transaction failed ", transactionRes?.hash);
     return null;
   }
 }
@@ -73,8 +71,7 @@ export const w3_changeAdmin = async ({
     type_arguments: [],
   };
 
-  const bcsTxn = await wallet.signAndSubmitTransaction(payload);
-  const transactionRes = await client.submitTransaction(bcsTxn);
+  const transactionRes = await wallet.signAndSubmitTransaction(payload);
   try {
     await client.waitForTransaction(transactionRes.hash, {
       checkSuccess: true
@@ -98,8 +95,7 @@ export const w3_changeTaxRate = async ({
     type_arguments: [],
   };
 
-  const bcsTxn = await wallet.signAndSubmitTransaction(payload);
-  const transactionRes = await client.submitTransaction(bcsTxn);
+  const transactionRes = await wallet.signAndSubmitTransaction(payload);
   try {
     await client.waitForTransaction(transactionRes.hash, {
       checkSuccess: true
@@ -125,8 +121,7 @@ export const w3_withdrawEarning = async ({
     type_arguments: [],
   };
 
-  const bcsTxn = await wallet.signAndSubmitTransaction(payload);
-  const transactionRes = await client.submitTransaction(bcsTxn);
+  const transactionRes = await wallet.signAndSubmitTransaction(payload);
   try {
     await client.waitForTransaction(transactionRes.hash, {
       checkSuccess: true
@@ -179,8 +174,37 @@ export const getCollectionAddress = (seedString: string): string => {
   return HexString.fromUint8Array(hash.digest()).toString();
 }
 
+// view functions
+export const getCurrentSupply = async (params: {
+  collectionAddress?: string,
+  collectionName?: string
+}): Promise<number> => {
+  if (!params.collectionName && !params.collectionAddress) return 0;
+  let objectAddress = params.collectionAddress;
+  if (!params.collectionAddress) {
+    objectAddress = getCollectionAddress(params.collectionName!);
+  }
+  const payload: Types.ViewRequest = {
+    function: '0x4::collection::count',
+    type_arguments: ["0x4::collection::Collection"],
+    arguments: [new HexString(objectAddress!).hex()]
+  };
+  const result = await client.view(payload);
+  return parseInt(BigInt((result as any)[0].vec).toString());
+}
+
 export function stringToHex(text: string) {
   const encoder = new TextEncoder();
   const encoded = encoder.encode(text);
   return Array.from(encoded, (i) => i.toString(16).padStart(2, "0")).join("");
+}
+
+export function noDecimalToAptosDecimal(value: string | number) {
+  let val = Number(value) * Math.pow(10, 8);
+  return val.toFixed(0)
+}
+
+export function AptosDecimalToNoDecimal(value: string | number | undefined) {
+  let val = Number(value ?? 0) / Math.pow(10, 8);
+  return parseFloat(val.toFixed(3))
 }

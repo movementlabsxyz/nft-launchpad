@@ -28,12 +28,13 @@ export class CollectionController {
       creator_name: req.body.creator_name,
       creator_image: req.body.creator_image,
       name: req.body.collection_name,
-      description: req.body.description,
+      desc: req.body.description,
       mint_price: parseInt(req.body.mint_price),
       total_supply: parseInt(req.body.total_supply),
       images_uri: req.body.images_uri,
       jsons_uri: req.body.jsons_uri,
       logo_uri: req.body.logo_uri,
+      collection_address: req.body.collection_address,
       tx_hash: ""
     };
 
