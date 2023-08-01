@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { signIn, signOut, useSession } from "next-auth/react"
 import styles from "./header.module.css"
+import { useEffect, useState } from "react"
 
 // The approach used in this component shows how to build a sign in and sign out
 // component that works on pages which support both client and server side
@@ -9,10 +10,16 @@ export default function Header() {
   const { data: session, status } = useSession()
   const loading = status === "loading"
 
+  const [navStatus, setNavStatus] = useState(0);
+
+  useEffect(() => {
+    console.log("navStatus =", navStatus);
+  }, [navStatus]);
+
   return (
     <header>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 border-b-2">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center">
             <MvmtLogo/>
         </a>
@@ -50,13 +57,19 @@ export default function Header() {
             </div>
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <li>
-                <Link href="/" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">Home</Link>
+                <Link href="/" className={(navStatus == 0 ? "text-blue-700" : "text-gray-900") + " block py-2 pl-3 pr-4  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"} aria-current="page"
+                  onClick={() => setNavStatus(0)}
+                >Home</Link>
               </li>
               <li>
-                <Link href="/creators" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Creators</Link>
+                <Link href="/creators" className={(navStatus == 1 ? "text-blue-700" : "text-gray-900") + " block py-2 pl-3 pr-4  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"}
+                  onClick={() => setNavStatus(1)}
+                >Creators</Link>
               </li>
               <li>
-                <Link href="/admins" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Admins</Link>
+                <Link href="/admins" className={(navStatus == 2 ? "text-blue-700" : "text-gray-900") + " block py-2 pl-3 pr-4  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"}
+                  onClick={() => setNavStatus(2)}
+                >Admins</Link>
               </li>
             </ul>
           </div>

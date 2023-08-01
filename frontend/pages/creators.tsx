@@ -78,7 +78,7 @@ export default function ProtectedPage() {
   // If no session exists, display access denied message
   if (!creatorJwt) {
     return (
-      <Layout>
+      <>
         <SocialConnect/>
         <div className="w-full text-center mt-4">
           <h3>Access Denied</h3>
@@ -89,13 +89,13 @@ export default function ProtectedPage() {
             }
           </p>
         </div>
-      </Layout>
+      </>
     )
   }
 
   // If session exists, display content
   return (
-    <Layout>
+    <>
       <div className="flex flex-col">
         <div className="flex justify-between">
           <Button 
@@ -140,6 +140,6 @@ export default function ProtectedPage() {
         onCloseModal={() => setDetailsShow(false)}
         noMint={true}
       />
-    </Layout>
+    </>
   )
 }

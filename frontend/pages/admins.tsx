@@ -25,11 +25,16 @@ export default function ProtectedPage() {
     console.log("sign body =", body);
 
     if (body) {
-      let jwt = await verifyAdmin(body.fullMessage, body.signature as string, wallet.account.address, wallet.account.publicKey as string);
+      if ("success" in body) { // for pontem wallet
+        if (!body.success) return;
+        body = (body as any).result;
+      }
+      let jwt = await verifyAdmin(body!.fullMessage, body!.signature as string, wallet.account.address, wallet.account.publicKey as string);
       console.log("sign jwt =", jwt);
       setAdminJwt(jwt);
     }
   }
+
   useEffect(() => {
     setAdminJwt(null);
     if (wallet.account) {
@@ -40,7 +45,7 @@ export default function ProtectedPage() {
   // If no session exists, display access denied message
   if (!adminJwt) {
     return (
-      <Layout>
+      
         <div className="w-full flex justify-between">
           <div></div>
           <div className="flex flex-col">
@@ -51,13 +56,11 @@ export default function ProtectedPage() {
             <WalletSelectorAntDesign/>
           </div>
         </div>
-      </Layout>
     )
   }
 
   // If session exists, display content
   return (
-    <Layout>
       <div className="flex flex-col">
         <div className="flex w-full justify-between mb-3">
           <div className="w-4/12 bg-white border-t border-b border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -96,6 +99,5 @@ export default function ProtectedPage() {
         </div>
         
       </div>
-    </Layout>
   )
 }

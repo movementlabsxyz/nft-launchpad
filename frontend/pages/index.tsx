@@ -27,7 +27,7 @@ export default function IndexPage() {
   }
 
   return (
-    <Layout>
+    <>
       <div className="flex flex-col px-5">
         <div className="flex justify-end float-right mb-3">
           <WalletSelectorAntDesign/>
@@ -49,6 +49,6 @@ export default function IndexPage() {
         details={selectedCollectionDetails}
         onCloseModal={() => setDetailsShow(false)}
       />
-    </Layout>
+    </>
   )
 }

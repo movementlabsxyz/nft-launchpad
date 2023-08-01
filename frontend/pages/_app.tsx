@@ -19,6 +19,7 @@ import {
   NetworkName
 } from "@aptos-labs/wallet-adapter-react";
 import { toast } from "react-toastify";
+import Layout from "../components/layout";
 
 // Use of the <SessionProvider> is mandatory to allow components that call
 // `useSession()` anywhere in your application to access the `session` object.
@@ -50,7 +51,9 @@ export default function App({
           toast.error(error);
         }}
       >
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </AptosWalletAdapterProvider>
     </SessionProvider>
   )
