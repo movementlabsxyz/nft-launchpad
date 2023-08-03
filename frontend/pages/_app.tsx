@@ -20,6 +20,7 @@ import {
 } from "@aptos-labs/wallet-adapter-react";
 import { toast } from "react-toastify";
 import Layout from "../components/layout";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Use of the <SessionProvider> is mandatory to allow components that call
 // `useSession()` anywhere in your application to access the `session` object.
@@ -43,18 +44,20 @@ export default function App({
   ];
 
   return (
-    <SessionProvider session={session}>
-      <AptosWalletAdapterProvider
-        plugins={wallets}
-        autoConnect={true}
-        onError={(error: any) => {
-          toast.error(error);
-        }}
-      >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </AptosWalletAdapterProvider>
-    </SessionProvider>
+    <GoogleOAuthProvider clientId="389985610045-m94f93vokaoggujnh1vnghip13ifv2nf.apps.googleusercontent.com">
+      <SessionProvider session={session}>
+        <AptosWalletAdapterProvider
+          plugins={wallets}
+          autoConnect={true}
+          onError={(error: any) => {
+            toast.error(error);
+          }}
+        >
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AptosWalletAdapterProvider>
+      </SessionProvider>
+    </GoogleOAuthProvider>
   )
 }

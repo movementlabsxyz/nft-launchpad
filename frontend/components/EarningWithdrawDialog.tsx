@@ -21,15 +21,15 @@ const EarningWithdrawDialog = ({
   }
 
   const renderContent = () => (
-    <div className="flex w-full h-full bg-white">
+    <div className="flex w-full h-full bg-white dark:bg-transparent">
       <div className="p-5 w-full">
         <div className="flex mb-2 px-1">  
           <span className="text-lg text-blue-600">Collection Name: </span>
-          <span className="px-5 text-xl text-red-950">{collectionName}</span>
+          <span className="px-5 text-xl text-red-950 dark:text-gray-300">{collectionName}</span>
         </div>
         <div className="flex mb-2">  
           <span className=" w-full p-1">Collection Creator Wallet :</span>
-          <input type="text" className=" w-full border-gray-200 border-2 p-1"
+          <input type="text" className=" w-full border-gray-200 border-2 p-1 dark:border-gray-600 dark:bg-gray-500 dark:text-gray-200"
             value={walletAddress} 
             onChange={(e) => setWalletAddress(e.target.value)}
           />
