@@ -12,7 +12,7 @@ import ButtonPrimary from "./ButtonPrimary";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { createCollectionApi, DEFAULT_BASE_IPFS_GATEWAY } from "../api/collections";
 
-import { useSession } from "next-auth/react"
+// import { useSession } from "next-auth/react"
 
 const ST_NONE = 0;
 const ST_UPLOADING = 1;
@@ -24,10 +24,11 @@ const ST_CREATING_SUCCESS = 5;
 const UploadItems = ({
   show,
   onOk,
-  onCloseModal
+  onCloseModal,
+  profile
 }) => {
   
-  const { data: session } = useSession()
+ // const { data: session } = useSession()
 
   const [imageFileList, setImageFileList] = useState([]);
   const [jsonFileList, setJsonFileList] = useState([]);
@@ -93,8 +94,8 @@ const UploadItems = ({
 
   const createCollection = async (imagesCid, jsonsCid, logoCid) => {
     if (
-      !session?.user?.email
-      || !session?.user?.name
+      !profile?.email
+      || !profile?.name
     ) {
       console.log("session expired");
       return false;
@@ -105,9 +106,9 @@ const UploadItems = ({
     let totalSupply = imageFileList?.length ?? 0;
 
     let newCollectionData = await createCollectionApi(
-      session?.user?.email,
-      session?.user?.name,
-      session?.user?.image ?? "",
+      profile?.email,
+      profile?.name,
+      profile?.picture ?? "",
       collectionName.trim(),
       collectionDesc.trim(),
       mintPrice,
@@ -142,10 +143,10 @@ const UploadItems = ({
   }
 
   const handleUploadAll = async () => {
-    if (!session?.user?.email) {
+    /*if (!session?.user?.email) {
       console.log("session error");
       return;
-    }
+    }*/
     if (collectionName.trim() === "") {
       console.log("error")
       toast.warn("Please input collection name and try again.", "Warning", 5000);
@@ -250,14 +251,14 @@ const UploadItems = ({
         <div className="mb-5">
           <div className="flex mb-2">  
             <span className=" w-full p-1">Collection Name(*) :</span>
-            <input type="text" className=" w-full border-gray-200 border-2 p-1"
+            <input type="text" className=" w-full border-gray-200 border-2 p-1 dark:text-gray-700"
               value={collectionName} 
               onChange={(e) => setCollectionName(e.target.value)}
             />
           </div>
           <div className="flex mb-2">  
             <span className=" w-full p-1">Collection Description :</span>
-            <textarea type="text" className=" w-full border-gray-200 border-2 p-1"
+            <textarea type="text" className=" w-full border-gray-200 border-2 p-1 dark:text-gray-700"
               value={collectionDesc} 
               onChange={(e) => setCollectionDesc(e.target.value)}
             />
@@ -267,7 +268,7 @@ const UploadItems = ({
             <div className="flex w-full">
               <input 
                 type="text" 
-                className="w-full border-gray-200 border-2 p-1 text-right" 
+                className="w-full border-gray-200 border-2 p-1 text-right dark:text-gray-700" 
                 placeholder="1"
                 value={mintPrice}
                 onChange={onChangeMintPrice}

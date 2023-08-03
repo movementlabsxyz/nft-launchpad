@@ -120,10 +120,10 @@ export default function AdminPage() {
   return (
     <div className="flex flex-col">
       <div>
-        <div className="flex-col p-3 bg-amber-100">  
-          <span className="w-3/12 mb-2 text-amber-950 text-lg px-1"> Current Admin: </span>
+        <div className="flex-col p-3 bg-amber-100 dark:bg-gray-600">  
+          <span className="w-3/12 mb-2 text-amber-950 text-lg px-1 dark:text-gray-300"> Current Admin: </span>
           <div className="flex mt-1 justify-between">
-            <input type="text" className="w-8/12 border-gray-200 border-2 p-1 mr-3"
+            <input type="text" className="w-8/12 border-gray-200 border-2 p-1 mr-3 dark:border-gray-600 dark:bg-gray-500 dark:text-gray-200"
               value={adminAddress} 
               onChange={(e) => setAdminAddress(e.target.value)}
             />
@@ -138,14 +138,14 @@ export default function AdminPage() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex p-3 bg-amber-100 mt-3 justify-between">
-          <div className="flex w-full">    
-            <span className="w-5/12 p-3 mb-2 text-amber-950 text-lg px-1"> Current Tax Rate: </span>
-            <input type="text" className="w-4/12 border-gray-200 border-2 p-1 mr-3 text-right"
+        <div className="flex p-3 bg-amber-100 mt-3 justify-between dark:bg-gray-600">
+          <div className="flex w-full ">    
+            <span className="w-5/12 p-3 mb-2 text-amber-950 text-lg px-1 dark:text-gray-300"> Current Tax Rate: </span>
+            <input type="text" className="w-4/12 border-gray-200 border-2 p-1 mr-3 text-right dark:border-gray-600 dark:bg-gray-500 dark:text-gray-200"
               value={taxRate} 
               onChange={(e) => setTaxRate(Number(e.target.value))}
             />
-            <span className="py-4">%</span>
+            <span className="py-4 dark:text-gray-300">%</span>
           </div>
           <Button 
             className=" mt-3 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
@@ -154,8 +154,8 @@ export default function AdminPage() {
             Change
           </Button>
         </div>
-        <div className="flex p-3 bg-amber-100 mt-3 justify-between">  
-          <span className="text-xl px-1 py-3"> Tax Taken: {taxValue} APT</span>
+        <div className="flex p-3 bg-amber-100 mt-3 justify-between dark:bg-gray-600">  
+          <span className="text-xl px-1 py-3 dark:text-gray-300"> Tax Taken: {taxValue} APT</span>
           <Button 
             className=" text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             onClick={() => withdrawTax()}
@@ -165,8 +165,8 @@ export default function AdminPage() {
         </div>
       </div>
       
-      <div className="flex-col p-3 bg-amber-100 mt-3 justify-between">
-        <span className="px-1 mb-3 text-lg">Earned per collection</span>
+      <div className="flex-col p-3 bg-amber-100 mt-3 justify-between dark:bg-gray-600">
+        <span className="px-1 mb-3 text-lg dark:text-gray-300">Earned per collection</span>
         <table className="w-full mt-2 text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>

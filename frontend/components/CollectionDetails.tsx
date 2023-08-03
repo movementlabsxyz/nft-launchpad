@@ -68,7 +68,7 @@ const CollectionDetails = ({
   }, [details?.name, updateToggle])
 
   const renderContent = () => (
-    <div className="flex w-full h-full bg-white">
+    <div className="flex w-full h-full bg-white dark:bg-transparent">
       <a href="#" className="w-6/12 h-full">
           <NcImage className="rounded-t-lg" src={details?.images_uri + "/0.png"} alt="" />
       </a>
@@ -84,7 +84,7 @@ const CollectionDetails = ({
             <div className="bg-purple-600 h-5 rounded-full dark:bg-purple-500" 
             style={{width: `${progressValue}%`}}></div>
           </div>
-          <p className="text-lg text-red-950 mt-5">Mint Price: {AptosDecimalToNoDecimal(details?.mint_price)} APT</p>
+          <p className="text-lg text-red-950 mt-5 dark:text-white">Mint Price: {AptosDecimalToNoDecimal(details?.mint_price)} APT</p>
           { !noMint ? <ButtonPrimary
             className="w-full mt-2 max-h-[60px] text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 "
             onClick={mintNft}

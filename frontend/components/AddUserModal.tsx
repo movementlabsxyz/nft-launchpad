@@ -88,25 +88,25 @@ const AddUserModal = ({
   }
 
   const renderContent = () => (
-    <div className="flex w-full h-full bg-white">
+    <div className="flex w-full h-full bg-white dark:bg-transparent">
       <div className="p-5 w-full">
         <div className="flex mb-2">  
           <span className=" w-full p-1">User Name(*) :</span>
-          <input type="text" className=" w-full border-gray-200 border-2 p-1"
+          <input type="text" className=" w-full border-gray-200 border-2 p-1 dark:text-gray-700"
             value={name} 
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="flex mb-2">  
           <span className=" w-full p-1">User Email :</span>
-          <input type="text" className=" w-full border-gray-200 border-2 p-1"
+          <input type="text" className=" w-full border-gray-200 border-2 p-1 dark:text-gray-700"
             value={email} 
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="flex mb-2">  
           <span className=" w-full p-1">User Wallet :</span>
-          <input type="text" className=" w-full border-gray-200 border-2 p-1"
+          <input type="text" className=" w-full border-gray-200 border-2 p-1 dark:text-gray-700"
             value={walletAddress} 
             onChange={(e) => setWalletAddress(e.target.value)}
           />

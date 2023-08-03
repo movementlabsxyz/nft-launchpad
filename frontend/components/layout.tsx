@@ -7,11 +7,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <>
+    <div className="h-full w-full dark:bg-gray-700 min-h-screen">
       <Header />
-      <main style={{ minHeight: "400px" }} className="p-3">{children}</main>
+      <main style={{ minHeight: "500px" }} className="p-3 dark:bg-gray-700 h-min">{children}</main>
       <ToastContainer />
       <Footer />
-    </>
+    </div>
   )
 }

@@ -4,10 +4,10 @@ import packageJSON from "../package.json"
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
-      <hr />
-      <ul className={styles.navItems}>
-        <li className={styles.navItem}>
+    <footer className="dark:text-gray-600 dark:bg-black p-10 w-full">
+      <hr className="dark:border-0"/>
+      <ul>
+        <li>
           Copyright @ 2023.  Movementlabs.xyz
         </li>
       </ul>

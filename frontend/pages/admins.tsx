@@ -48,7 +48,7 @@ export default function ProtectedPage() {
   if (!adminJwt) {
     return (
       
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between dark:text-gray-200">
           <div></div>
           <div className="flex flex-col">
             <span className="text-2xl py-1 pt-4">Access Denied</span>
