@@ -10,7 +10,7 @@ const main = async () => {
 
   // setup database
   try {
-    await db.sequelize.sync({});
+    await db.sequelize.sync({ force: false });
   } catch(e: any) {
     // tslint:disable-next-line:no-console
     console.error("Db error happened.", e);

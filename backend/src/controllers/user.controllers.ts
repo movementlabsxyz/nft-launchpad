@@ -217,9 +217,10 @@ export class UserController {
           name: 'Auth',
           walletAddress: req.body.walletAddress,
           signature: req.body.signature,
+          role: 1,
           nonce: data.toJSON().nonce,
         };
-        let jwtToken = jwt.sign({ data: tok }, "token key", { expiresIn: '24h' });
+        let jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
         res.send({ jwtToken });
       } else {
         res.status(400).send({
@@ -256,7 +257,13 @@ export class UserController {
           message: "You are not a creator!"
         });
       } else {
-        res.send(data)
+        const tok = {
+          name: 'Auth',
+          email: req.body.emailAddress,
+          role: 0,
+        };
+        let jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
+        res.send({ jwtToken });
       }
     })
       .catch((err) => {
