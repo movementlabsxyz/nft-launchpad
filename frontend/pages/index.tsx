@@ -40,7 +40,7 @@ export default function IndexPage() {
                 <CollectionCard data={colData} onClick={() => onCollectionCardClick(colData)}/>
               ))
             } 
-          </div> : <div className="flex justify-center text-lg w-full">No Collections yet</div> 
+          </div> : <div className="flex justify-center text-lg w-full dark:text-gray-300">No Collections yet</div> 
         }
       </div>
 

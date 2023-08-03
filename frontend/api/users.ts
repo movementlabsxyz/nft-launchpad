@@ -44,7 +44,7 @@ export async function verifyAdmin(
       return null;
     }
     console.log("verifyAdmin success data =", data);
-    return data.data;
+    return data.data.jwtToken;
   } catch {
     console.log("axios failed");
     return null;
@@ -66,7 +66,7 @@ export async function verifyCreator(
       return null;
     }
     console.log("verifyCreator success data =", data);
-    return data.data;
+    return data.data.jwtToken;
   } catch {
     console.log("axios failed");
     return null;
@@ -81,13 +81,17 @@ export async function addUserApi(
   role: number,
 ) {
   try {
+    const jwt = localStorage.getItem("admin-jwt");
+    console.log("addUser jwt=", jwt);
     const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/`, {
       name,
       email,
       wallet,
       role
     }, {
-      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+      headers: new AxiosHeaders()
+        .setContentType('application/x-www-form-urlencoded')
+        .setAuthorization('Bearer ' + jwt)
     });
     if (data.status !== 200) {
       console.log("api failed status =", data.status);
@@ -109,6 +113,7 @@ export async function updateUserApi(
   role: number,
 ) {
   try {
+    const jwt = localStorage.getItem("admin-jwt");
     const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/edit`, {
       id,
       name,
@@ -116,7 +121,9 @@ export async function updateUserApi(
       wallet,
       role
     }, {
-      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+      headers: new AxiosHeaders()
+        .setContentType('application/x-www-form-urlencoded')
+        .setAuthorization('Bearer ' + jwt)
     });
     if (data.status !== 200) {
       console.log("api failed status =", data.status);
@@ -134,10 +141,14 @@ export async function removeUserApi(
   id: number,
 ) {
   try {
+    const jwt = localStorage.getItem("admin-jwt");
+    console.log("removeUserApi jwt=", jwt);
     const data = await axios.post(`${process.env.LAUNCHPAD_API_URL ?? DEFAULT_API_URL}/user/remove`, {
       id,
     }, {
-      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+      headers: new AxiosHeaders()
+        .setContentType('application/x-www-form-urlencoded')
+        .setAuthorization('Bearer ' + jwt)
     });
     if (data.status !== 200) {
       console.log("api failed status =", data.status);

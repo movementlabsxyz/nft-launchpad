@@ -14,7 +14,7 @@ export default function ProtectedPage() {
   const wallet = useWallet();
   const [verified, setVerified] = useState(true);
   const [mode, setMode] = useState(0);  
-  const [adminJwt, setAdminJwt] = useState(null);
+  const [adminJwt, setAdminJwt] = useState(localStorage.getItem('accessToken'));
 
   const verifyWallet = async () => {
     if (!wallet.account) return;
@@ -32,7 +32,9 @@ export default function ProtectedPage() {
         body = (body as any).result;
       }
       let jwt = await verifyAdmin(body!.fullMessage, body!.signature as string, wallet.account.address, wallet.account.publicKey as string);
-      console.log("sign jwt =", jwt);
+      
+      // add jwt to session storage
+      localStorage.setItem("admin-jwt", jwt);
       setAdminJwt(jwt);
     }
   }

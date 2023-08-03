@@ -20,6 +20,7 @@ export async function createCollectionApi(
   logo_cid: string | null,
 ) {
   try {
+    const jwt = localStorage.getItem("creator-jwt");
     let mint_price = noDecimalToAptosDecimal(_mint_price);
     let collection_address = getCollectionAddress(collection_name);
     let logo_uri = logo_cid ? (DEFAULT_BASE_IPFS_GATEWAY + logo_cid) : (DEFAULT_BASE_IPFS_GATEWAY + images_cid + "/1.png");
@@ -36,7 +37,9 @@ export async function createCollectionApi(
       jsons_uri: DEFAULT_BASE_IPFS_GATEWAY + jsons_cid,
       logo_uri
     }, {
-      headers: new AxiosHeaders().setContentType('application/x-www-form-urlencoded')
+      headers: new AxiosHeaders()
+        .setContentType('application/x-www-form-urlencoded')
+        .setAuthorization('Bearer ' + jwt)
     });
     if (data.status !== 200) {
       console.log("api failed status =", data.status);

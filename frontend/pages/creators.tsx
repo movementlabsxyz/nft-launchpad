@@ -26,7 +26,7 @@ export default function ProtectedPage() {
 
   const [stateData, setStateData] = useState<StateInfo | null>(null);
 
-  const [creatorJwt, setCreatorJwt] = useState(null);
+  const [creatorJwt, setCreatorJwt] = useState(localStorage.getItem("creator-jwt"));
 
   const [ user, setUser ] = useState([]);
   const [ profile, setProfile ] = useState<any>(null);
@@ -64,6 +64,8 @@ export default function ProtectedPage() {
 
     let jwt = await verifyCreator(profile?.email);
     console.log("sign jwt =", jwt);
+
+    localStorage.setItem("creator-jwt", jwt);
     setCreatorJwt(jwt);
   }
 
