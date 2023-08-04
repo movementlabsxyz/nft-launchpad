@@ -26,10 +26,16 @@ export default function ProtectedPage() {
 
   const [stateData, setStateData] = useState<StateInfo | null>(null);
 
-  const [creatorJwt, setCreatorJwt] = useState(localStorage.getItem("creator-jwt"));
+  const [creatorJwt, setCreatorJwt] = useState<string | null>(null);
 
   const [ user, setUser ] = useState([]);
   const [ profile, setProfile ] = useState<any>(null);
+
+  // when window is ready
+  useEffect(() => {
+    let item = localStorage.getItem("creator-jwt");
+    item && setCreatorJwt(item);
+  }, [])
   
   const login = useGoogleLogin({
       onSuccess: (codeResponse: any) => {

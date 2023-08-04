@@ -14,7 +14,13 @@ export default function ProtectedPage() {
   const wallet = useWallet();
   const [verified, setVerified] = useState(true);
   const [mode, setMode] = useState(0);  
-  const [adminJwt, setAdminJwt] = useState(localStorage.getItem('accessToken'));
+  const [adminJwt, setAdminJwt] = useState(null);
+
+  // when window is ready
+  useEffect(() => {
+    let item = localStorage.getItem("admin-jwt");
+    item && setAdminJwt(item as any);
+  }, [])
 
   const verifyWallet = async () => {
     if (!wallet.account) return;
