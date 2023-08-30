@@ -48,7 +48,7 @@ export class UserController {
       });
       return;
     }
-    
+
     db.User.destroy({
       where: {
         id: req.body.id
@@ -56,7 +56,7 @@ export class UserController {
     })
     .then(data => {
       res.status(200).send();
-      //res.send(data);
+      // res.send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -105,9 +105,9 @@ export class UserController {
   }
 
   public static async all(req: Request, res: Response) {
-    let email = req.query.email;
+    const email = req.query.email;
     let _promise = db.User.findAll();
-    if (email) {  
+    if (email) {
       _promise = db.User.findAll({
         where: {
           email
@@ -134,7 +134,7 @@ export class UserController {
       });
       return;
     }
-    let walletAddy = req.query.walletAddress;
+    const walletAddy = req.query.walletAddress;
     db.User.findAll({
       where: {
         wallet: walletAddy,
@@ -147,7 +147,7 @@ export class UserController {
           message: "You are not Admin!"
         });
       } else {
-        let nonce = (Math.random() % 10000).toFixed(3);
+        const nonce = (Math.random() % 10000).toFixed(3);
         db.User.update({ nonce }, {
           where: {
             wallet: walletAddy
@@ -179,21 +179,21 @@ export class UserController {
       return;
     }
 
-    const getBytes = (v: any): Array<number> => {
+    const getBytes = (v: any): number[] => {
       let val = v as string;
       val = val.slice(2, val.length);
-      let bytes: Array<number> = [];
+      const bytes: number[] = [];
       for (let i = 0; i < val.length; i += 2) {
-        let x = parseInt(val[i], 16);
-        let y = parseInt(val[i+1], 16);
-        let v = x * 16 + y;
+        const x = parseInt(val[i], 16);
+        const y = parseInt(val[i+1], 16);
+        const v = x * 16 + y;
         bytes.push(v);
       }
       return bytes;
     }
-    
-    let signatureBytes = getBytes(req.body.signature);
-    let pkBytes = getBytes(req.body.publicKey);
+
+    const signatureBytes = getBytes(req.body.signature);
+    const pkBytes = getBytes(req.body.publicKey);
 
     db.User.findOne({
       where: {
@@ -220,7 +220,7 @@ export class UserController {
           role: 1,
           nonce: data.toJSON().nonce,
         };
-        let jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
+        const jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
         res.send({ jwtToken });
       } else {
         res.status(400).send({
@@ -262,7 +262,7 @@ export class UserController {
           email: req.body.emailAddress,
           role: 0,
         };
-        let jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
+        const jwtToken = jwt.sign({ data: tok }, process.env.JWT_SECKEY, { expiresIn: '24h' });
         res.send({ jwtToken });
       }
     })

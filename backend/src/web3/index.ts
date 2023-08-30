@@ -1,11 +1,11 @@
 
-import { 
-  AptosAccount, 
-  TxnBuilderTypes, 
-  BCS, 
-  MaybeHexString, 
-  HexString, 
-  AptosClient, 
+import {
+  AptosAccount,
+  TxnBuilderTypes,
+  BCS,
+  MaybeHexString,
+  HexString,
+  AptosClient,
   FaucetClient,
   Types,
 } from "aptos";
@@ -29,7 +29,7 @@ export const w3_create_collection = async ({
   const triggerAccount = new AptosAccount(
     new HexString(process.env.TRIGGER_PRIV_KEY).toUint8Array()
   );
-  
+
   console.log(`trigger: ${triggerAccount.address()}`);
 
   const payload: any = {

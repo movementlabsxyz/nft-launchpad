@@ -39,7 +39,7 @@ export class CollectionController {
     };
 
     // Create a collection onchain
-    let txHash = await w3_create_collection(collection);
+    const txHash = await w3_create_collection(collection);
     if (!txHash) {
       res.status(400).send({
         message: "Creating Collection failed!"
@@ -64,9 +64,9 @@ export class CollectionController {
   }
 
   public static async all(req: Request, res: Response) {
-    let creator_email = req.query.creator_email;
+    const creator_email = req.query.creator_email;
     let _promise = db.Collection.findAll();
-    if (creator_email) {  
+    if (creator_email) {
       _promise = db.Collection.findAll({
         where: {
           creator_email
@@ -94,7 +94,7 @@ export class CollectionController {
       return;
     }
 
-    let collection_name = req.body.collection_name;
+    const collection_name = req.body.collection_name;
     db.Collection.findOne({
       where: {
         name: collection_name
@@ -106,7 +106,7 @@ export class CollectionController {
         });
         return;
       }
-      let data = found.toJSON();
+      const data = found.toJSON();
       getCurrentSupply(data.collection_address).then(v => {
         res.status(200).send({
           nft_name: collection_name + " #" + (v + 1),
